@@ -1,19 +1,19 @@
-# Python 3.12 slim — лёгкий и быстрый
+# Python 3.12 slim 
 FROM python:3.12-slim
 
-# Рабочая директория
+# Working directory inside the container
 WORKDIR /app
 
-# Копируем только requirements сначала (кеширование слоёв)
+# Copying and installing dependencies
 COPY api/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Копируем весь бэкенд
+# Copying the rest of the application code
 COPY api/ .
 
-# Если в main.py у тебя uvicorn запускается через python main.py — оставляем так
-# Если там просто FastAPI app, лучше явно указать uvicorn (рекомендую!)
+# Open port 8000 for the API
+EXPOSE 8000
+
 #CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
 
-# Если ты реально запускаешь именно python main.py и там внутри uvicorn.run(), то:
 CMD ["python", "main.py"]
